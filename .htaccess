@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Assurez-vous que le fichier ou le dossier n'existe pas
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Redirigez toutes les requêtes vers index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Ajoutez des en-têtes de sécurité
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self';"
+</IfModule>
+
+# Désactivez les scripts PHP dans les répertoires où ils ne devraient pas être exécutés
+<FilesMatch "\.(htaccess|env|ini|log|sh|php)$">
+    Require all denied
+</FilesMatch>
+
